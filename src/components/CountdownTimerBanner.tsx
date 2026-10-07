@@ -95,7 +95,7 @@ export const CountdownTimerBanner: React.FC<CountdownTimerBannerProps> = ({ onNa
           {/* Headline & Description */}
           <div className="space-y-3">
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-              Applications Launch in{' '}
+              Applications Launch on{' '}
               <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
                 October 21, 2026
               </span>
