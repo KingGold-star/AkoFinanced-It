@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Clock, Calculator, FileText, ArrowRight, ShieldCheck, Lock } from 'lucide-react';
+import { X, Lock, Calculator, ArrowRight } from 'lucide-react';
 import { useCountdown } from '../utils/countdown';
 
 interface ApplicationLockedModalProps {
@@ -14,7 +14,6 @@ export const ApplicationLockedModal: React.FC<ApplicationLockedModalProps> = ({
   isOpen,
   onClose,
   onNavigate,
-  requestedType,
 }) => {
   const countdown = useCountdown();
 
@@ -24,29 +23,24 @@ export const ApplicationLockedModal: React.FC<ApplicationLockedModalProps> = ({
     ...(countdown.showWeeks
       ? [
           {
-            code: 'WW',
             label: 'WEEKS',
             value: countdown.formatted.ww,
           },
         ]
       : []),
     {
-      code: 'DD',
       label: 'DAYS',
       value: countdown.formatted.dd,
     },
     {
-      code: 'HH',
       label: 'HOURS',
       value: countdown.formatted.hh,
     },
     {
-      code: 'MM',
       label: 'MINS',
       value: countdown.formatted.mm,
     },
     {
-      code: 'SS',
       label: 'SECS',
       value: countdown.formatted.ss,
     },
@@ -55,116 +49,89 @@ export const ApplicationLockedModal: React.FC<ApplicationLockedModalProps> = ({
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        {/* Backdrop */}
+        {/* Soft dark blur backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-slate-900/80 backdrop-blur-md cursor-pointer"
+          className="fixed inset-0 bg-[#0B0B0F]/80 backdrop-blur-md cursor-pointer"
         />
 
-        {/* Modal Window */}
+        {/* Simple & Premium Modal Card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.94, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}
-          className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 text-center"
+          exit={{ opacity: 0, scale: 0.94, y: 16 }}
+          transition={{ type: 'spring', duration: 0.35, bounce: 0.1 }}
+          className="relative w-full max-w-md bg-[#0B0B0F] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-8 text-center text-white z-10 overflow-hidden"
         >
-          {/* Header Banner */}
-          <div className="bg-gradient-to-r from-[#0B0B0F] via-slate-900 to-[#1D61F2] p-6 text-white relative">
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-              aria-label="Close modal"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#2D62FF]/20 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="w-12 h-12 mx-auto rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-blue-300 mb-3 shadow-lg">
-              <Lock className="w-6 h-6 text-blue-300" />
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="relative z-10 space-y-6">
+            {/* Minimal Lock Icon */}
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shadow-inner">
+              <Lock className="w-5 h-5" />
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-[11px] font-bold uppercase tracking-wider mb-2">
-              <Clock className="w-3.5 h-3.5" />
-              <span>Portal Calibration In Progress</span>
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-white">
-              Applications Open October 21
-            </h3>
-            <p className="text-xs text-slate-300 mt-1 max-w-sm mx-auto">
-              {requestedType === 'BUSINESS'
-                ? 'SME Limited Liability loan applications will officially open on October 21, 2026.'
-                : 'Personal loan applications will officially open on October 21, 2026.'}
-            </p>
-          </div>
-
-          {/* Modal Body */}
-          <div className="p-6 space-y-5 text-left">
-            
-            {/* Live Mini Countdown */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 block mb-2">
-                Live Countdown to Launch
-              </span>
-              <div className={`grid ${countdown.showWeeks ? 'grid-cols-5' : 'grid-cols-4'} gap-2 justify-center`}>
-                {units.map((u) => (
-                  <div key={u.code} className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-xs">
-                    <span className="text-lg sm:text-xl font-black font-mono text-slate-900 block leading-tight">
-                      {u.value}
-                    </span>
-                    <span className="text-[8px] font-bold text-slate-400 uppercase mt-0.5 block">{u.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Explanation Note */}
-            <div className="text-xs sm:text-sm text-slate-600 leading-relaxed space-y-2">
-              <p>
-                During this countdown window, loan applications are temporarily paused while our partner Nigerian banks conduct annual intake calibration.
+            {/* Typography */}
+            <div className="space-y-2">
+              <h3 className="text-2xl font-black tracking-tight text-white">
+                Applications Open October 21
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xs mx-auto leading-relaxed">
+                Online loan applications will officially open on October 21, 2026. Explore our terms and repayment options below.
               </p>
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-50 text-blue-800 text-xs font-medium">
-                <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
-                <span>You can still browse all products, compare interest rates, and simulate repayments freely!</span>
-              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-2 pt-2">
+            {/* Clean Countdown Grid */}
+            <div className={`grid ${countdown.showWeeks ? 'grid-cols-5' : 'grid-cols-4'} gap-2 pt-1`}>
+              {units.map((u, i) => (
+                <div
+                  key={i}
+                  className="bg-white/[0.04] border border-white/10 rounded-2xl py-3 px-2 flex flex-col items-center justify-center shadow-xs"
+                >
+                  <span className="text-xl sm:text-2xl font-black font-mono tracking-tight text-white tabular-nums">
+                    {u.value}
+                  </span>
+                  <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">
+                    {u.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Actions: One Primary + Dismiss */}
+            <div className="space-y-2.5 pt-2">
               <button
                 onClick={() => {
                   onClose();
                   onNavigate('calculator');
                 }}
-                className="w-full py-3 px-4 rounded-xl bg-[#2D62FF] hover:bg-blue-600 text-white font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                className="w-full py-3.5 px-5 rounded-full bg-[#2D62FF] hover:bg-blue-600 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               >
                 <Calculator className="w-4 h-4" />
-                <span>Simulate Repayments on Calculator</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => {
-                  onClose();
-                  onNavigate(requestedType === 'BUSINESS' ? 'businesses' : 'individuals');
-                }}
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <FileText className="w-3.5 h-3.5 text-slate-600" />
-                <span>Review Document Checklist</span>
+                <span>Explore Loan Calculator</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
 
               <button
                 onClick={onClose}
-                className="w-full py-2 text-center text-xs text-slate-500 hover:text-slate-700 font-medium cursor-pointer"
+                className="w-full py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
               >
-                Continue Browsing Website
+                Continue Browsing
               </button>
             </div>
-
           </div>
         </motion.div>
       </div>
