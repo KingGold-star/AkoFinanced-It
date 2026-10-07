@@ -25,6 +25,10 @@ process.on('uncaughtException', (err: any) => {
     console.warn('[Process] Suppressed EBUSY file watch notification:', err.message);
     return;
   }
+  if (err?.code === 'ECONNRESET' || err?.code === 'EPIPE' || err?.message?.includes?.('ECONNRESET')) {
+    console.warn('[Process] Handled client connection notice:', err.message);
+    return;
+  }
   console.error('[Process] Uncaught exception:', err);
 });
 
