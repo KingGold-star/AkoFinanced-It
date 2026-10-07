@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, ShieldAlert, Calculator, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Clock, Calculator, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useCountdown } from '../utils/countdown';
 
 interface CountdownTimerBannerProps {
@@ -106,76 +106,40 @@ export const CountdownTimerBanner: React.FC<CountdownTimerBannerProps> = ({ onNa
             </p>
           </div>
 
-          {/* DYNAMIC TIMER BLOCKS [WW, DD, HH, MM, SS] -> [DD, HH, MM, SS] */}
+          {/* DYNAMIC TIMER BLOCKS */}
           <div className="w-full max-w-3xl pt-2">
             <div className={`grid gap-2.5 sm:gap-4 ${countdown.showWeeks ? 'grid-cols-5' : 'grid-cols-4'} items-center justify-center`}>
               {units.map((unit) => (
                 <div
                   key={unit.key}
-                  className="group relative flex flex-col items-center justify-center p-3 sm:p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-400/40 backdrop-blur-md transition-all duration-200 shadow-lg"
+                  className="group relative flex flex-col items-center justify-center p-4 sm:p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-400/40 backdrop-blur-md transition-all duration-200 shadow-lg"
                 >
-                  {/* Unit Tag: [WW], [DD], [HH], etc. */}
-                  <span className="text-[10px] sm:text-xs font-mono font-bold text-blue-400/90 mb-1 tracking-widest">
-                    [{unit.code}]
-                  </span>
-
                   {/* Digit Box */}
-                  <span className="text-2xl sm:text-4xl lg:text-5xl font-black font-mono tracking-tight text-white tabular-nums drop-shadow-sm">
+                  <span className="text-3xl sm:text-5xl lg:text-6xl font-black font-mono tracking-tight text-white tabular-nums drop-shadow-sm">
                     {unit.value}
                   </span>
 
                   {/* Unit Label */}
-                  <span className="text-[9px] sm:text-[11px] font-extrabold text-slate-400 tracking-wider mt-1.5 uppercase">
+                  <span className="text-[10px] sm:text-xs font-extrabold text-slate-400 tracking-wider mt-2 uppercase">
                     {unit.label}
                   </span>
                 </div>
               ))}
             </div>
-
-            {/* Sub-label showing behavior */}
-            <p className="text-[11px] sm:text-xs text-slate-400 mt-3 font-medium">
-              {countdown.showWeeks ? (
-                <span>Format: <strong className="text-slate-300 font-mono">[WW, DD, HH, MM, SS]</strong> • Drops to <strong className="text-slate-300 font-mono">[DD, HH, MM, SS]</strong> under 7 days</span>
-              ) : (
-                <span>Format: <strong className="text-slate-300 font-mono">[DD, HH, MM, SS]</strong> • Less than 1 week remaining</span>
-              )}
-            </p>
           </div>
 
-          {/* Status Alert Banner */}
-          <div className="w-full max-w-2xl bg-blue-950/60 border border-blue-500/20 rounded-2xl p-4 sm:p-5 flex items-start sm:items-center gap-3 text-left">
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 shrink-0 mt-0.5 sm:mt-0">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div className="text-xs sm:text-sm text-slate-300 leading-snug">
-              <span className="font-bold text-white block mb-0.5">Loan Applications Currently Paused</span>
-              You can browse all terms, check SME or Personal loan criteria, and calculate your exact monthly repayments right now. Submissions unlock automatically on October 21.
-            </div>
-          </div>
-
-          {/* Quick Exploratory Actions (Users can browse and use calculators) */}
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-1">
+          {/* Quick Action Button */}
+          <div className="pt-2">
             <button
               onClick={() => {
                 if (onNavigate) onNavigate('calculator');
                 else window.location.hash = 'calculator';
               }}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#2D62FF] hover:bg-blue-600 active:scale-95 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3 rounded-full bg-[#2D62FF] hover:bg-blue-600 active:scale-95 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2 cursor-pointer"
             >
               <Calculator className="w-4 h-4" />
               <span>Explore Loan Calculator</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={() => {
-                if (onNavigate) onNavigate('how-it-works');
-                else window.location.hash = 'how-it-works';
-              }}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/15 active:scale-95 text-white font-bold text-xs sm:text-sm transition-all border border-white/20 flex items-center gap-2 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-blue-400" />
-              <span>View Requirements & Process</span>
             </button>
           </div>
 

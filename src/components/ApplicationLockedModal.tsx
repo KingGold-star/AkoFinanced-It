@@ -111,12 +111,11 @@ export const ApplicationLockedModal: React.FC<ApplicationLockedModalProps> = ({
               </span>
               <div className={`grid ${countdown.showWeeks ? 'grid-cols-5' : 'grid-cols-4'} gap-2 justify-center`}>
                 {units.map((u) => (
-                  <div key={u.code} className="bg-white border border-slate-200 rounded-xl p-2 shadow-xs">
-                    <span className="text-[9px] font-mono font-bold text-blue-600 block">[{u.code}]</span>
-                    <span className="text-base sm:text-lg font-black font-mono text-slate-900 block leading-tight">
+                  <div key={u.code} className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-xs">
+                    <span className="text-lg sm:text-xl font-black font-mono text-slate-900 block leading-tight">
                       {u.value}
                     </span>
-                    <span className="text-[8px] font-bold text-slate-400 uppercase">{u.label}</span>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase mt-0.5 block">{u.label}</span>
                   </div>
                 ))}
               </div>

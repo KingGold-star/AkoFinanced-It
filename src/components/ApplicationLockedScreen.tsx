@@ -78,22 +78,14 @@ export const ApplicationLockedScreen: React.FC<ApplicationLockedScreenProps> = (
             </span>
             <div className={`grid ${countdown.showWeeks ? 'grid-cols-5' : 'grid-cols-4'} gap-2.5 sm:gap-4 max-w-lg mx-auto`}>
               {units.map((u) => (
-                <div key={u.code} className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-xs">
-                  <span className="text-[10px] font-mono font-bold text-blue-600 block mb-0.5">[{u.code}]</span>
-                  <span className="text-2xl sm:text-3xl font-black font-mono text-slate-900 block leading-tight">
+                <div key={u.code} className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs">
+                  <span className="text-3xl sm:text-4xl font-black font-mono text-slate-900 block leading-tight">
                     {u.value}
                   </span>
-                  <span className="text-[9px] font-extrabold text-slate-400 uppercase mt-1 block">{u.label}</span>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase mt-1.5 block">{u.label}</span>
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-slate-400 mt-3 font-medium">
-              {countdown.showWeeks ? (
-                <span>Format: <strong>[WW, DD, HH, MM, SS]</strong> (Weeks will be dropped once under 7 days)</span>
-              ) : (
-                <span>Format: <strong>[DD, HH, MM, SS]</strong> (Under 1 week remaining)</span>
-              )}
-            </p>
           </div>
 
           {/* Value props while waiting */}
