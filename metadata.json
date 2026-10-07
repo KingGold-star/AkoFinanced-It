@@ -1,0 +1,6 @@
+{
+  "name": "AkoFinanced It",
+  "description": "Financing advisory and application-support platform for individuals and businesses in Nigeria.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

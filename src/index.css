@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #5A5F71;
+  --secondary: #8F95A5;
+  --accent: #2D62FF;
+  --background: #FFFFFF;
+  --text-primary: #0B0B0F;
+  --link: #2D62FF;
+
+  --primary-dark: #0B0B0F;
+  --accent-blue: #2D62FF;
+  --soft-blue: #EFF4FF;
+  --dark-section: #0B0B0F;
+  --secondary-text: #5A5F71;
+  --muted: #8F95A5;
+  --border: #E2E8F0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #2D62FF;
+  color: #FFFFFF;
+}
+
+::-moz-selection {
+  background-color: #2D62FF;
+  color: #FFFFFF;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Keyframe animations for gentle floating & pulsing background blobs */
+@keyframes pulseSlow {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08) rotate(15deg);
+  }
+}
+
+@keyframes floatGentle {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-25px) rotate(10deg);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 12s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatGentle 16s ease-in-out infinite;
+}
+
+/* ================= INTERACTIVE SPOTLIGHT GLOW BUTTON EFFECT ================= */
+.btn-glow,
+button.btn-glow,
+a.btn-glow,
+button[class*="bg-[#0B0B0F]"],
+button[class*="bg-[#2D62FF]"],
+button[class*="bg-slate-900"],
+button[class*="bg-blue-600"],
+button[class*="bg-gradient"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease;
+}
+
+.btn-glow::before,
+button[class*="bg-[#0B0B0F]"]::before,
+button[class*="bg-[#2D62FF]"]::before,
+button[class*="bg-slate-900"]::before,
+button[class*="bg-blue-600"]::before,
+button[class*="bg-gradient"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle 95px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.15) 35%,
+      transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+.btn-glow:hover::before,
+button[class*="bg-[#0B0B0F]"]:hover::before,
+button[class*="bg-[#2D62FF]"]:hover::before,
+button[class*="bg-slate-900"]:hover::before,
+button[class*="bg-blue-600"]:hover::before,
+button[class*="bg-gradient"]:hover::before {
+  opacity: 1;
+}
+
+.btn-glow:hover,
+button[class*="bg-[#0B0B0F]"]:hover,
+button[class*="bg-[#2D62FF]"]:hover,
+button[class*="bg-slate-900"]:hover,
+button[class*="bg-blue-600"]:hover,
+button[class*="bg-gradient"]:hover {
+  box-shadow: 0 10px 25px -4px rgba(45, 98, 255, 0.35), 0 6px 12px -4px rgba(132, 94, 194, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-glow:active,
+button[class*="bg-[#0B0B0F]"]:active,
+button[class*="bg-[#2D62FF]"]:active,
+button[class*="bg-slate-900"]:active,
+button[class*="bg-blue-600"]:active,
+button[class*="bg-gradient"]:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+
+/* Custom Utilities */
+.bg-brand-primary {
+  background-color: #5A5F71;
+}
+
+.bg-brand-secondary {
+  background-color: #8F95A5;
+}
+
+.bg-brand-accent {
+  background-color: #2D62FF;
+}
+
+.bg-brand-dark {
+  background-color: #0B0B0F;
+}
+
+.bg-brand-soft {
+  background-color: #EFF4FF;
+}
+
+.text-brand-primary {
+  color: #5A5F71;
+}
+
+.text-brand-secondary {
+  color: #8F95A5;
+}
+
+.text-brand-accent {
+  color: #2D62FF;
+}
+
+.text-brand-dark {
+  color: #0B0B0F;
+}
+
+.text-brand-link {
+  color: #2D62FF;
+}
+
+.border-brand {
+  border-color: #E2E8F0;
+}
+
+.rounded-brand {
+  border-radius: 12px;
+}
+
+.rounded-card {
+  border-radius: 12px;
+}
+
+.rounded-button {
+  border-radius: 12px;
+}
+
+.rounded-input {
+  border-radius: 12px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8F95A5;
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5A5F71;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
