@@ -4,6 +4,10 @@ import { Footer } from './components/Footer';
 import { LoanWidget } from './components/LoanWidget';
 import { StepProcessSection } from './components/StepProcessSection';
 import { AnimatedAuroraBackground } from './components/AnimatedAuroraBackground';
+import { CountdownTimerBanner } from './components/CountdownTimerBanner';
+import { ApplicationLockedModal } from './components/ApplicationLockedModal';
+import { ApplicationLockedScreen } from './components/ApplicationLockedScreen';
+import { calculateCountdown } from './utils/countdown';
 
 // Code-split heavy routes, dashboards, calculators, and modals
 const CustomerDashboard = lazy(() => import('./components/CustomerDashboard').then(m => ({ default: m.CustomerDashboard })));
@@ -73,6 +77,8 @@ export default function App() {
   const [initialWizardData, setInitialWizardData] = useState<any>(null);
   const [submittedReference, setSubmittedReference] = useState<string | null>(null);
   const [submittedApplicationData, setSubmittedApplicationData] = useState<any>(null);
+  const [isLockedModalOpen, setIsLockedModalOpen] = useState(false);
+  const [lockedRequestedType, setLockedRequestedType] = useState<'INDIVIDUAL' | 'BUSINESS'>('INDIVIDUAL');
   // URL hash and route listener
   useEffect(() => {
     const handleUrlChange = () => {
@@ -190,6 +196,13 @@ export default function App() {
   };
 
   const handleStartApplication = (type: 'INDIVIDUAL' | 'BUSINESS', prefillData?: any) => {
+    const countdown = calculateCountdown();
+    if (!countdown.isExpired) {
+      setLockedRequestedType(type);
+      setIsLockedModalOpen(true);
+      return;
+    }
+
     setInitialApplicantType(type);
     setInitialWizardData(prefillData || null);
     setCurrentPage('apply-wizard');
@@ -229,6 +242,22 @@ export default function App() {
         return <LegalPage onStartApplication={handleStartApplication} onNavigate={setCurrentPage} />;
 
       case 'apply-wizard': {
+        const countdown = calculateCountdown();
+        if (!countdown.isExpired) {
+          return (
+            <ApplicationLockedScreen
+              onReturnHome={() => {
+                setCurrentPage('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onNavigate={(page) => {
+                setCurrentPage(page.replace(/^\//, ''));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          );
+        }
+
         const wizardPrefill = initialWizardData || (user ? {
           firstName: user.full_name?.split(' ')[0] || '',
           lastName: user.full_name?.split(' ').slice(1).join(' ') || '',
@@ -462,6 +491,14 @@ export default function App() {
               </div>
             </div>
 
+            {/* COUNTDOWN TIMER BANNER (Positioned directly below Hero Section) */}
+            <CountdownTimerBanner
+              onNavigate={(page) => {
+                setCurrentPage(page.replace(/^\//, ''));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+
             {/* TRUST & ADVISORY DISCLOSURE BANNER */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="bg-[#2D62FF] text-white rounded-[12px] p-6 sm:p-10 shadow-xl border border-blue-600 relative overflow-hidden">
@@ -642,6 +679,18 @@ export default function App() {
             onStartApplication={handleStartApplication}
           />
         )}
+
+        {/* Global Application Locked Modal during Countdown */}
+        <ApplicationLockedModal
+          isOpen={isLockedModalOpen}
+          onClose={() => setIsLockedModalOpen(false)}
+          onNavigate={(page) => {
+            setIsLockedModalOpen(false);
+            setCurrentPage(page.replace(/^\//, ''));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          requestedType={lockedRequestedType}
+        />
       </div>
 
     </div>
