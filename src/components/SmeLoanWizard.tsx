@@ -486,16 +486,17 @@ export const SmeLoanWizard: React.FC<SmeLoanWizardProps> = ({
 
     try {
       const res = await api.submitApplication(payload);
-      await sendToFormspree(res.reference_number);
+      // Trigger Formspree webhook asynchronously in background so applicant is not delayed
+      sendToFormspree(res.reference_number).catch((e) => console.warn('[Formspree async]', e));
       setLoading(false);
       if (onCompleted) {
-        onCompleted(res.reference_number, res.application);
+        onCompleted(res.reference_number, res.application || payload);
       }
     } catch (apiErr: any) {
-      // Offline fallback: generate reference code and send to Formspree
+      // Offline fallback: generate reference code and proceed to confirmation
       try {
         const fallbackRef = `AKO-${Math.floor(100000 + Math.random() * 900000)}`;
-        await sendToFormspree(fallbackRef);
+        sendToFormspree(fallbackRef).catch((e) => console.warn('[Formspree async]', e));
         setLoading(false);
         if (onCompleted) {
           onCompleted(fallbackRef, payload);

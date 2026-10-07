@@ -20,6 +20,14 @@ import {
   syncLenderToSupabase
 } from './src/server/supabase.js';
 
+process.on('uncaughtException', (err: any) => {
+  if (err?.code === 'EBUSY') {
+    console.warn('[Process] Suppressed EBUSY file watch notification:', err.message);
+    return;
+  }
+  console.error('[Process] Uncaught exception:', err);
+});
+
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 5000;
 
@@ -1726,6 +1734,11 @@ async function startServer() {
       server: { middlewareMode: true },
       appType: 'spa'
     });
+    if (vite.watcher) {
+      vite.watcher.on('error', (err: any) => {
+        console.warn('[Vite Watcher] Handled file watch error:', err?.message || err);
+      });
+    }
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');

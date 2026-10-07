@@ -16,7 +16,8 @@ const StaffLoginGate = lazy(() => import('./components/admin/StaffLoginGate').th
 const ApplicationWizard = lazy(() => import('./components/ApplicationWizard').then(m => ({ default: m.ApplicationWizard })));
 const SmeLoanWizard = lazy(() => import('./components/SmeLoanWizard').then(m => ({ default: m.SmeLoanWizard })));
 const PersonalLoanWizard = lazy(() => import('./components/PersonalLoanWizard').then(m => ({ default: m.PersonalLoanWizard })));
-const ConfirmationScreen = lazy(() => import('./components/ConfirmationScreen').then(m => ({ default: m.ConfirmationScreen })));
+import { ConfirmationScreen } from './components/ConfirmationScreen';
+import { ErrorBoundary } from './components/ErrorBoundary';
 const LoanCalculator = lazy(() => import('./components/LoanCalculator').then(m => ({ default: m.LoanCalculator })));
 
 // Sub-pages lazy loaded on-demand
@@ -305,8 +306,21 @@ export default function App() {
         return (
           <ConfirmationScreen
             referenceNumber={submittedReference || 'AKO-229062'}
+            applicationData={submittedApplicationData}
+            user={user}
             onReturnHome={() => {
               setCurrentPage('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onGoToDashboard={() => {
+              setCurrentPage('dashboard');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAccountCreated={(newUser, newToken) => {
+              handleLoginSuccess(newUser, newToken);
+            }}
+            onSignInClick={() => {
+              setCurrentPage('dashboard');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
@@ -644,8 +658,8 @@ export default function App() {
       <AnimatedAuroraBackground />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Navbar (Hidden for Admin, Dashboard, and any signed-in user views because they contain their own full header and navigation) */}
-        {currentPage !== 'admin' && currentPage !== 'dashboard' && !user && (
+        {/* Navbar (Hidden only for dedicated full-bleed app workspaces: Admin CRM and Customer Dashboard) */}
+        {currentPage !== 'admin' && currentPage !== 'dashboard' && (
           <Navbar
             user={user}
             currentPath={currentPage.startsWith('/') ? currentPage : `/${currentPage}`}
@@ -663,14 +677,16 @@ export default function App() {
         )}
 
         {/* Main Page Area */}
-        <main className={`flex-1 ${currentPage === 'dashboard' || currentPage === 'admin' || !!user ? 'pt-0' : 'pt-20 sm:pt-24'} bg-white`}>
-          <Suspense fallback={<PageLoadingFallback />}>
-            {renderContent()}
-          </Suspense>
+        <main className={`flex-1 ${currentPage === 'dashboard' || currentPage === 'admin' ? 'pt-0' : 'pt-20 sm:pt-24'} bg-white`}>
+          <ErrorBoundary onReset={() => { setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <Suspense fallback={<PageLoadingFallback />}>
+              {renderContent()}
+            </Suspense>
+          </ErrorBoundary>
         </main>
 
-        {/* Footer */}
-        {currentPage !== 'admin' && currentPage !== 'dashboard' && !user && (
+        {/* Footer (Hidden only for Admin CRM and Customer Dashboard) */}
+        {currentPage !== 'admin' && currentPage !== 'dashboard' && (
           <Footer
             onNavigate={(page) => {
               setCurrentPage(page);

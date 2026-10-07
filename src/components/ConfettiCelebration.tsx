@@ -47,27 +47,32 @@ export const ConfettiCelebration: React.FC<ConfettiCelebrationProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let particles: Particle[] = [];
-    const timeouts: NodeJS.Timeout[] = [];
-
-    // Handle high-DPI retina screens
-    const resizeCanvas = () => {
+    try {
+      const canvas = canvasRef.current;
       if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      let animationFrameId: number;
+      let particles: Particle[] = [];
+      const timeouts: (ReturnType<typeof setTimeout>)[] = [];
+
+      // Handle high-DPI retina screens
+      const resizeCanvas = () => {
+        try {
+          if (!canvas) return;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        } catch {
+          // ignore resize errors
+        }
+      };
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
 
     // Helper to spawn a gentle batch of particles from a specific origin
     const spawnOriginBatch = (
@@ -298,6 +303,9 @@ export const ConfettiCelebration: React.FC<ConfettiCelebrationProps> = ({
       window.removeEventListener('resize', resizeCanvas);
       timeouts.forEach(clearTimeout);
     };
+    } catch (err) {
+      console.warn('[ConfettiCelebration notice]', err);
+    }
   }, [triggerKey, duration]);
 
   return (
